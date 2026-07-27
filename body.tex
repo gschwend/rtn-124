@@ -1,8 +1,176 @@
 \section{Introduction}
+\label{sec:intro:0}
 
-\textbf{Put your paper here.}
-\vskip 0.4in
+The Vera C. Rubin Observatory's Data Preview 2 (DP2) represents a
+significant step forward in preparation for the upcoming Legacy Survey
+of Space and Time (LSST), providing an essential testbed for
+scientific tools and analytical pipelines using precursor imaging
+data~\cite{rtn_095}. A central goal of LSST is estimating photometric
+redshifts (photo-𝑧s) for billions of galaxies, supporting
+extragalactic astrophysical research and cosmological studies that
+depend on reliable redshift measurements and distributions. In support
+of this objective, the Rubin project established a strategic plan for
+delivering high-quality photo-𝑧s to the research
+community~\cite{rtn_049}.  
+
+While photo-𝑧 estimates are not part of the official Data Preview 1
+(DP1) or DP2 data products, the "Photo-z Science Unit" undertook the
+task of producing photo-𝑧 values for all galaxies in DP2 using
+available multi-band imaging data on a best-effort basis, establishing
+a foundation for future large-scale implementations.   This science
+unit delivered redshifts for DP1\cite{sitcomtn_154, dp1_paper}.
+
+For this purpose, we utilized the RAIL (Redshift Assessment
+Infrastructure Layers) software framework, a versatile and modular
+tool developed for photo-𝑧 estimation and
+validation~\cite{rail_paper}. In particular, we leveraged RAIL to
+train photo-𝑧 estimation models using high-quality spectroscopic
+redshift training samples matched to the DP2 photometric catalog.
+
+This document presents the resulting best-effort photo-𝑧 catalogs,
+which should be considered highly preliminary, along with the
+methodologies and procedures employed to create them. Furthermore, we
+discuss key characteristics of the DP2 photometric data, the
+spectroscopic calibration samples, and the resulting photo-𝑧
+catalogs. Supplementary information regarding data products and
+distribution is provided in the appendices.
+
+We anticipate receiving input from scientific users as they examine
+the data and identify issues we may have overlooked, and we plan to
+integrate this feedback into subsequent efforts.
 
 
 
-This is the Rubin Observatory overview paper: \citet{2019ApJ...873..111I}.
+\section{Data}
+\label{sec:data:0}
+
+\subsection{Rubin DP2}
+\label{sec:data:dp1}
+
+The Rubin Observatory’s Data Preview 2 dataset is the first public release of Rubin observatory imaging data from the full LSST camera processed through the LSST Science Pipelines~\citep{PSTN-019}, serving as a critical testbed for scientific and technical validation ahead of full LSST operations.  DP2 is based on observations from the LSST camera (LSSTCam) and includes multi-band optical imaging in u, g, r, i, z and y filters over $>$ 1000 square degrees of sky.  The dataset consists of processed images, source catalogs, and associated metadata, all formatted using the Rubin Data Butler system~\citep{2022SPIE12189E..11J}.  Although somewhat smaller in scale than future LSST datasets, DP2 offers realistic photometric measurements, object detection, and data structures, making it an invaluable resource for developing and testing algorithms for tasks such as \photoz estimation, object classification, and data quality assessment.
+
+Critically, the fields selected for commisioning observation included several calibration fields, for which many high-quality redshifts exist from other surveys. 
+
+
+\subsubsection{Preparation of photometric object catalogs}
+\label{sec:data:dp1:preparation}
+
+The Rubin Data Management (Rubin DM) pipeline measures multiple types of object photometry, the first stage in creating a \photoz catalog was to determine which measured photometry we would use as inputs.  In this note, we generally use the 1.0 arc-second Gaussian Aperture fluxes and their associated errors, e.~g.~\texttt{u\_gaap1p0Flux} and \texttt{u\_gaap1p0FluxErr}.  These fluxes should provide good measures of consistent galaxy colors within the defined aperture, ideal for \photoz estimation, though they may not necessarily reflect the colors of the overall galaxy if there is a significant color gradient and the galaxy is larger than the 1.0 arc-second aperture.  This choice of photometric measurement may not be ideal, and investigation into the optimized set of photometric inputs will continue into the future.   This is similar to studies done with DP1 and described in the associated technote and paper~\cite{sitcom_154, dp1_pz_paper}.
+
+Preparing object catalog~\citep{10.71929/rubin/2570325} data for \photoz algorithm training and estimation included five steps:
+
+\begin{enumerate}
+\item{Applying quality cuts to the object catalog.   We developed selections for the training and test datasets (\selection{match\_xxx}), and two additional selections for full DP1 catalogs: one applicable for fields with observations in only four bands (\selection{gold\_4\_band}), the other for fields with observations in all six bands (\selection{gold}).  These selections are described below.}
+\item{Converting fluxes in nJy to AB magnitudes ($m_\text{AB} = -2.5 \log_{10}(f_\nu / \text{nJy}) + 31.4$)}
+\item{De-reddening to account for Galactic dust.  We use the SFD dust maps\citep{SFD}.}
+\item{Cross-matching objects with reference catalogs that include redshift information as described in Sec.~\ref{sec:data:reference}.}
+\item{Shuffling and splitting the resulting catalog into \dataset{training} and \dataset{test} data sets.}
+\end{enumerate}
+
+\subsubsection{Data properties}
+
+
+We have developed tools to generate diagnostic plots of both the input object catalogs and the \photoz estimates as part of our data analysis.
+Fig.~\ref{fig:dp_mags} shows histograms of the AB magnitudes in 1.0 arc-second apertures of objects in the \dataset{test\_v1} dataset, which includes an explicit magnitude cut, $m_{i} < 26.0$.
+Fig.~\ref{fig:dp_mag_i_v_redshift} shows the correlation between magnitude and redshift for all objects in the \dataset{test\_v1} data set.  
+Fig.~\ref{fig:dp_color_v_redshift} shows the ``adjacent band colors'', i.e., $u-g$, $g-r$, $r-i$, $i-z$, $z-y$ versus redshift for the same, with a series of SED templates (as used by template-fitting algorithms, see Sec.~\ref{sec:method:template}) overlaid.  
+Finally, Fig.~\ref{fig:dp_color_v_color} shows the color-color plots for the same adjacent colors.  In all cases, the 1.0 arc-second aperture magnitudes are used for plotting.
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=\linewidth]{figures/mags.pdf}
+    \caption{1.0 arc-second Gaussian Aperture (Gaap) magnitudes (in AB system) of objects in each of the six Rubin filter bands in the \dataset{test\_v1} dataset.  These aperture magnitudes were used as the inputs for the \photoz algorithms.}
+    \label{fig:dp_mags}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=\linewidth]{figures/mag_i_v_redshift.pdf}
+    \caption{1.0 arc-second Gaussian Aperture (Gaap) i-band magnitude versus redshift for all objects in the \dataset{test\_v1} dataset.}
+    \label{fig:dp_mag_i_v_redshift}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[height=7in]{figures/color_v_redshift.pdf}
+    \caption{``Adjacent band colors'', i.e., $u-g$, $g-r$, $r-i$, $i-z$, $z-y$, in 1.0 arc-second apertures versus redshift for all objects in the \dataset{test\_v1} dataset.  Colored lines represent the expected colors for the eight ``CWWSB'' SEDs described in Sec.~\ref{sec:method:template}, and should very roughly show the predicted range of color evolution expected for our galaxy sample.}
+    \label{fig:dp_color_v_redshift}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=\linewidth]{figures/color_v_color.pdf}
+    \caption{Color-color plots for all objects in the `\dataset{test\_v1} dataset.  Colored lines represent the expected colors for the eight ``CWWSB'' SEDs described in Sec.~\ref{sec:method:template}, and should very roughly show the predicted color evolution expected for our galaxy sample.}
+    \label{fig:dp_color_v_color}
+\end{figure*}
+
+
+\subsection{Redshift reference sample}
+
+
+
+\section{Methodology}
+
+
+\subsection{Template fitting based estimators}
+
+
+\subsection{Machine learning based estimators}
+
+
+\subsection{Analysis framework and bookkeeping software}
+
+
+\subsection{Data exploration and algorithm optimization}
+
+
+\subsection{Production of redshfits catalogs}
+
+
+\section{Performance}
+
+
+\subsection{Redshift estimator performance}
+
+
+\subsubsection{Redshift estimation quality}
+
+
+\subsubsection{Redshift estimation quality}
+
+
+\subsection{Technical performance}
+
+
+\section{Limitations and caveats}
+
+
+\section{Summary and conclusion}
+
+
+\section{Data Products}
+
+
+\subsection{Configuration files}
+
+\subsection{Ancillary input files}
+
+\subsection{Estimator data models}
+
+\subsection{Redshift estimates}
+
+\subsubsection{Probability distributions}
+
+\subsubsection{Point estimates and summary statistics}
+
+\subsection{Performance Monitoring Plots}
+
+
+
+\section{Data Distribution}
+
+\subsection{Distribution via the Rubin Data Butler}
+
+\subsection{Distribution via the Photo-z Server}
+
+\subsection{Distribution as LSDB}
