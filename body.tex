@@ -220,6 +220,15 @@ For the test set, we instead want the sample to correctly reflect the color--mag
   \label{fig:test_dist}
 \end{figure*}
 
+In Fig.~\ref{fig:corner_train_test}, we compare the joint distributions of redshift, $i$-band magnitude, and the $g-r$, $r-i$, and $i-z$ colors for the training set, the SOM-resampled test set, and a subsample of the DP2 photometric population.  We find that the test set matches the DP2 subsample very well in color--magnitude space, confirming that the SOM resampling produces a test sample that is representative of the objects to which the models are applied.  The training set, in contrast, covers a wider range in color--magnitude space, which benefits the model training by exposing the algorithms to a broader region of feature space.
+
+\begin{figure*}[htbp]
+  \centering
+  \includegraphics[width=0.9\linewidth]{figures/corner_dp2_train_test.png}
+  \caption{Corner plot comparing the training set (blue), the SOM-resampled test set (red), and a subsample of the DP2 photometric population (green) in redshift, $i$-band magnitude, and the $g-r$, $r-i$, and $i-z$ colors.  The diagonal panels show the one-dimensional marginal distributions, and the off-diagonal panels show the two-dimensional distributions, with the filled and outlined contours enclosing the densest regions of each sample.  The DP2 population has no reference redshift and therefore does not appear in the redshift panels.  The test set (red) closely follows the DP2 population (green) in color--magnitude space, while the training set (blue) spans a wider range.}
+  \label{fig:corner_train_test}
+\end{figure*}
+
 \section{Methodology}
 
 We used RAIL as the core tool for training and applying \photoz estimation models.   We also used RAIL to evaluate the model performance through a suite of diagnostic metrics using \photoz point estimates, including redshift bias, scatter (e.g., normalized median absolute deviation), and catastrophic outlier rate and to make diagnostic plots of the algorithm's performance.  Specifically, we used the methodology described below to evaluate all the algorithms listed in Tab.~\ref{tab:alg}.
