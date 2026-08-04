@@ -47,24 +47,25 @@ integrate this feedback into subsequent efforts.
 \subsection{Rubin DP2}
 \label{sec:data:dp2}
 
-The Rubin Observatory’s Data Preview 2 dataset is the first public release of Rubin observatory imaging data from the full LSST camera processed through the LSST Science Pipelines~\citep{PSTN-019}, serving as a critical testbed for scientific and technical validation ahead of full LSST operations.  DP2 is based on observations from the LSST camera (LSSTCam) and includes multi-band optical imaging in u, g, r, i, z and y filters over $>$ 1000 square degrees of sky.  The dataset consists of processed images, source catalogs, and associated metadata, all formatted using the Rubin Data Butler system~\citep{2022SPIE12189E..11J}.  Although somewhat smaller in scale than future LSST datasets, DP2 offers realistic photometric measurements, object detection, and data structures, making it an invaluable resource for developing and testing algorithms for tasks such as \photoz estimation, object classification, and data quality assessment.   See Fig.~\ref{fig:dp2_redshifts} for the survey footprint and the median estimated redshifts in each tract of sky.
+The Rubin Observatory’s Data Preview 2 dataset is the first public release of Rubin observatory imaging data from the full LSST camera processed through the LSST Science Pipelines~\citep{PSTN-019}, serving as a critical testbed for scientific and technical validation ahead of full LSST operations.  DP2 is based on observations from the LSST camera (LSSTCam) and includes multi-band optical imaging in u, g, r, i, z and y filters over $>$ 1000 square degrees of sky.  The dataset consists of processed images, source catalogs, and associated metadata, all formatted using the Rubin Data Butler system~\citep{2022SPIE12189E..11J}.  Although somewhat smaller in scale than future LSST datasets, DP2 offers realistic photometric measurements, object detection, and data structures, making it an invaluable resource for developing and testing algorithms for tasks such as \photoz estimation, object classification, and data quality assessment.   The DP2 footprint spans several disjoint regions of sky and exhibits substantial variation in imaging depth and band coverage, which we describe in Sec.~\ref{sec:data:dp2:preparation}.
 
-\begin{figure*}
-  \centering
-  \includegraphics[width=\linewidth]{figures/dp2_footprint_4v6.png}
-   \includegraphics[width=\linewidth]{figures/dp2_footprint_rec.png}  
-    \caption{DP2 survery footprints, showing showing the median redshifts (using the flexzboost algorithm) in each tract of sky.  In the top figure tracts with only 4-band photometry are shown in red, in the wheres in the bottom figure they are included.}
-    \label{fig:dp2_redshifts}
-\end{figure*}
-
-
-Critically, the fields selected for commisioning observation included several calibration fields, for which many high-quality redshifts exist from other surveys. 
+Critically, the fields selected for commisioning observation included several calibration fields, for which many high-quality redshifts exist from other surveys.
 
 
 \subsubsection{Preparation of photometric object catalogs}
 \label{sec:data:dp2:preparation}
 
 The Rubin Data Management (Rubin DM) pipeline measures multiple types of object photometry, the first stage in creating a \photoz catalog was to determine which measured photometry we would use as inputs.  In this note, we generally use the 1.0 arc-second Gaussian Aperture fluxes and their associated errors, e.~g.~\texttt{u\_gaap1p0Flux} and \texttt{u\_gaap1p0FluxErr}.  These fluxes should provide good measures of consistent galaxy colors within the defined aperture, ideal for \photoz estimation, though they may not necessarily reflect the colors of the overall galaxy if there is a significant color gradient and the galaxy is larger than the 1.0 arc-second aperture.  This choice of photometric measurement may not be ideal, and investigation into the optimized set of photometric inputs will continue into the future.   This is similar to studies done with DP1 and described in the associated technote and paper~\cite{Charles2025sitcomtn154, dp1_pz_paper}.
+
+The DP2 imaging is highly inhomogeneous in both depth and band coverage, which directly shapes how we prepare the catalogs and train our models.  In Fig.~\ref{fig:dp2_depth}, we show the median $5\sigma$ extended-source depth in the $i$ band, derived from the 1.0 arc-second GAaP fluxes, for each of the 1391 tracts in DP2.  The median depth across the footprint is $24.27$~mag, but the tract-to-tract variation is large, spanning roughly $23.5$ to $25.5$~mag.  In addition, not all tracts are observed in all six bands: as shown in the bottom panel of Fig.~\ref{fig:dp2_depth}, 931 tracts have full six-band ($ugrizy$) coverage while 460 tracts are observed in only four bands ($griz$).  Because the available bands set the input features for \photoz estimation, we cannot apply a single model uniformly across the footprint.  We therefore train, for each algorithm in this work, one model on the six-band tracts and a separate model on the four-band tracts, and apply each model to the corresponding subset of the footprint.  We note that the large depth variation implies that the effective magnitude limit --- and hence the \photoz quality --- also varies across the footprint.
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=\linewidth]{figures/footprint_iband_gaap_ext_depth_mollweide.png}
+  \includegraphics[width=\linewidth]{figures/footprint_iband_depth_band_outlines_mollweide.png}
+    \caption{The DP2 survey footprint shown in a Mollweide projection.  \textit{Top panel:} the median $5\sigma$ extended-source depth in the $i$ band, computed from the 1.0 arc-second GAaP fluxes, for each of the 1391 tracts in DP2.  The color scale (bottom) runs from $\sim 23.5$ to $\sim 25.5$~mag, and the median depth across the footprint is $24.27$~mag.  The depth varies substantially from tract to tract.  \textit{Bottom panel:} the same depth map, with tracts outlined according to their band coverage --- the red outline marks the 931 tracts with full six-band ($ugrizy$) photometry, and the black outline marks the 460 tracts with only four-band ($griz$) photometry.  For each algorithm in this work we train one model on the six-band tracts and a separate model on the four-band tracts.}
+    \label{fig:dp2_depth}
+\end{figure*}
 
 Preparing object catalog~\citep{RubinObs2025DP1} data for \photoz algorithm training and estimation included five steps:
 
