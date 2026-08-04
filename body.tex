@@ -2,7 +2,7 @@
 \label{sec:intro:0}
 
 The Vera C. Rubin Observatory's Data Preview 2 (DP2) represents a
-significant step forward in preparation for the upcoming Legacy Survey
+significant step forward in preparation for the upcoming Leugacy Survey
 of Space and Time (LSST), providing an essential testbed for
 scientific tools and analytical pipelines using precursor imaging
 data~\cite{DMTN-095}. A central goal of LSST is estimating photometric
@@ -20,7 +20,7 @@ available multi-band imaging data on a best-effort basis, establishing
 a foundation for future large-scale implementations.   This science
 unit delivered redshifts for DP1\cite{Charles2025sitcomtn154, dp1_paper}.
 
-For this purpose, we utilized the RAIL (Redshift Assessment
+For this purpose, we used the RAIL (Redshift Assessment
 Infrastructure Layers) software framework, a versatile and modular
 tool developed for photo-𝑧 estimation and
 validation~\cite{RAIL}. In particular, we leveraged RAIL to
@@ -47,7 +47,16 @@ integrate this feedback into subsequent efforts.
 \subsection{Rubin DP2}
 \label{sec:data:dp2}
 
-The Rubin Observatory’s Data Preview 2 dataset is the first public release of Rubin observatory imaging data from the full LSST camera processed through the LSST Science Pipelines~\citep{PSTN-019}, serving as a critical testbed for scientific and technical validation ahead of full LSST operations.  DP2 is based on observations from the LSST camera (LSSTCam) and includes multi-band optical imaging in u, g, r, i, z and y filters over $>$ 1000 square degrees of sky.  The dataset consists of processed images, source catalogs, and associated metadata, all formatted using the Rubin Data Butler system~\citep{2022SPIE12189E..11J}.  Although somewhat smaller in scale than future LSST datasets, DP2 offers realistic photometric measurements, object detection, and data structures, making it an invaluable resource for developing and testing algorithms for tasks such as \photoz estimation, object classification, and data quality assessment.
+The Rubin Observatory’s Data Preview 2 dataset is the first public release of Rubin observatory imaging data from the full LSST camera processed through the LSST Science Pipelines~\citep{PSTN-019}, serving as a critical testbed for scientific and technical validation ahead of full LSST operations.  DP2 is based on observations from the LSST camera (LSSTCam) and includes multi-band optical imaging in u, g, r, i, z and y filters over $>$ 1000 square degrees of sky.  The dataset consists of processed images, source catalogs, and associated metadata, all formatted using the Rubin Data Butler system~\citep{2022SPIE12189E..11J}.  Although somewhat smaller in scale than future LSST datasets, DP2 offers realistic photometric measurements, object detection, and data structures, making it an invaluable resource for developing and testing algorithms for tasks such as \photoz estimation, object classification, and data quality assessment.   See Fig.~\ref{fig:dp2_redshifts} for the survey footprint and the median estimated redshifts in each tract of sky.
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=\linewidth]{figures/dp2_footprint_4v6.png}
+   \includegraphics[width=\linewidth]{figures/dp2_footprint_rec.png}  
+    \caption{DP2 survery footprints, showing showing the median redshifts (using the flexzboost algorithm) in each tract of sky.  In the top figure tracts with only 4-band photometry are shown in red, in the wheres in the bottom figure they are included.}
+    \label{fig:dp2_redshifts}
+\end{figure*}
+
 
 Critically, the fields selected for commisioning observation included several calibration fields, for which many high-quality redshifts exist from other surveys. 
 
@@ -60,11 +69,11 @@ The Rubin Data Management (Rubin DM) pipeline measures multiple types of object 
 Preparing object catalog~\citep{RubinObs2025DP1} data for \photoz algorithm training and estimation included five steps:
 
 \begin{enumerate}
-\item{Applying quality cuts to the object catalog.   We developed selections for the training and test datasets (\selection{match\_xxx}), and two additional selections for full DP2 catalogs: one applicable for fields with observations in only four bands (\selection{gold\_4\_band}), the other for fields with observations in all six bands (\selection{gold}).  These selections are described below.}
+\item{Applying quality cuts to the object catalog.   We developed selections for the training and test datasets (\selection{match\_xxx}), and two additional selections for full DP2 catalogs: one applicable for fields with observations in only four bands (\selection{dp2\_4band}, requiring at 'griz' $< 23mag,$  the other for fields with observations in all six bands (\selection{dp2\_6band}, requiring 'ugrizy' $< 22mag$).}
 \item{Converting fluxes in nJy to AB magnitudes ($m_{\rm AB} = -2.5 \log_{10}(f_\nu / \text{nJy}) + 31.4$)}
 \item{De-reddening to account for Galactic dust.  We use the SFD dust maps\citep{SFD}.}
 \item{Cross-matching objects with reference catalogs that include redshift information as described in Sec.~\ref{sec:data:reference}.}
-\item{Shuffling and splitting the resulting catalog into \dataset{training} and \dataset{test} data sets.}
+\item{Shuffling and splitting the resulting catalog into \texttt{training} and \texttt{test} data sets.}
 \end{enumerate}
 
 \subsubsection{Data properties}
@@ -115,7 +124,7 @@ TQ...
 
 \section{Methodology}
 
-We used the RAIL as the core tool for training and applying \photoz estimation models.   We also used RAIL to evaluate the model performance through a suite of diagnostic metrics using \photoz point estimates, including redshift bias, scatter (e.g., normalized median absolute deviation), and catastrophic outlier rate and to make diagnostic plots of the algorithm's performance.  Specifically, we used the methodology described below to evaluate all the algorithms listed in Tab.~\ref{tab:alg}.
+We used RAIL as the core tool for training and applying \photoz estimation models.   We also used RAIL to evaluate the model performance through a suite of diagnostic metrics using \photoz point estimates, including redshift bias, scatter (e.g., normalized median absolute deviation), and catastrophic outlier rate and to make diagnostic plots of the algorithm's performance.  Specifically, we used the methodology described below to evaluate all the algorithms listed in Tab.~\ref{tab:alg}.
 
 As part of the Rubin \photoz roadmap process, \code{KNN} and \code{BPZ} were chosen as ``testing algorithms'' from the shortlist of algorithms considered in~\citep{DMTN-049}, the expectation is that these will supported by project data management team for Data Preview 2,  while the others will be supported by the wider community, the RAIL development team and DESC collaboration.
 
@@ -234,10 +243,50 @@ Applying a simple cut on the RMS of the $p(z)$ distribution can dramatically red
 \section{Limitations and caveats}
 \label{sec:limitations:0}
 
+The \photoz estimates described in this note were done on a best-effort basis by members of the ``Photo-z Science Unit'' and are not official Rubin data products.  As such, the release of the various DP1-related data products comes with a number of caveats.
+
+\begin{itemize}
+\item{The size and depth of the training set seriously limits the robustness of the training past a redshift of $z \simeq 1.5$.  See in particular Fig.~\ref{fig:dp_mag_i_v_redshift}.}
+\item{In general, \photoz algorithms do not perform well with objects with marginal detections or with non-detections in several bands.  Simply put, the photometric uncertainties in such objects often overwhelms the information that is present and the photometric estimates are very uncertain.  See Fig.~\ref{fig:faint_object_pdf} for an example of the PDF of such an object.   Similarly, see, Fig~\ref{fig:faint_objects} as an illustration of how the accuracy of a \photoz point-estimate degrades significantly for faint objects.}
+\item{Taking points (1) and (2) together, we do not advise to use any of the provided DP1 \photoz estimates without applying cuts on the detection significance or the width of the $p(z)$ distribution, or both.}
+\item{While we did put some work into optimizing the performance of the various algorithms, this was by no means comprehensive, and we urge caution in drawing any conclusions about the relative merits of the algorithms.}
+\item{The training and test sets were drawn from the same set of spectroscopically matched objects.  As such, the training set is fairly representative of the test set.   On the other hand, the full DP1 catalog does not have any spectroscopic selections applied, so the training and test sets will not be representative of the full DP1 data set.}
+\end{itemize}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.45\linewidth]{figures/bad_pdf.pdf}
+    \caption{Example of a $p(z)$ distribution for a faint object is not detected in all bands.  (In this case the object was only significantly detected in 'g' and 'r' bands).}
+    \label{fig:faint_object_pdf}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.45\linewidth]{figures/tpz_scatter_faint.pdf}
+    \caption{Point-estimates versus spectroscopic redshifts for all galaxies in the reserved test set with $m_{i} > 24.0$, showing the degradation in estimation performance for faint objects.}
+    \label{fig:faint_objects}
+\end{figure*}
+
+
 
 \section{Summary and conclusion}
 \label{sec:summary:0}
 
+This note describes an initial calculation of photometric redshifts on the Rubin Data Preview 2 dataset using the tools and workflows developed specifically for this purpose by the Photo-z Science Unit.  These early results are very promising, we show that we can successfully match Rubin data with spectroscopic samples with deep six-band Rubin coverage to create a reference sample and run our software pipelines to generate a catalog of individual object redshifts consisting of both point 1D redshift PDFs and point estimate redshifts.  We show results for six \photoz algorithms using a reserve set of redshifts, and see that \photoz performance is in-line with expectations both in terms of our redshift predictions and for compute times.  We describe available data products and anticipated methods to access them.  Overall, this is a very successful initial test of \photoz pipelines.
+
+However, work will continue on several fronts to further optimize the performance of our redshift predictions.  As mentioned earlier in the note, the definition of the true redshift reference sample used to train our algorithms has a large impact on results, being the ``truth'' used to define the flux/color-to-redshift mapping that is inherent to \photoz estimation.  We will work to refine our reference sample definition, which objects to include/exclude based on quality flags, explore the tradeoffs of including grism and many-band \photoz estimates with larger redshift uncertainties in our training sample, and other such effects.  As more and more Rubin data is taken, areal coverage is increasing, including coverage of additional deep calibration fields with existing spec-z datasets.  This will naturally improve \photoz performance.  Expansion of reference redshifts will also enable the development of improved object flagging for identifying which redshifts are trustworthy and those which are likely to be incorrect.
+
+We will also continue to examine the Rubin photometry and evaluate the performance of multiple measurement algorithms.  In this note we used Gaussian Aperture (Gaap) fluxes and magnitudes, as they are expected to produce consistent colors.  We will undertake a thorough exploration of multiple flux measurements (e.~g.~cModel, Sersic, additional Gaap apertures) to test which combinations lead to the best \photoz estimates, as well as combinations like using multiple aperture magnitudes that may contain information on the galaxy light profile that could help to constrain redshift.  As we are still in the engineering and testing phase of the project, there is ongoing work to characterize system performance, and improved understanding of the system will likely lead to better \photoz performance.  For example, there may be some hints that u-band fluxes are overestimated and u-band uncertainties underestimated at faint magnitudes (see the high redshift u-g colors in Fig.~\ref{fig:dp_color_v_redshift} and figures in~\citet{RTN-095}).   DP2 data was obtained using LSSTCam during commisioning while future data releases will use LSSTCam data from survey operations, and thus performance for DR1 and beyond may be shaped by improvements in operations, data reduction and photometric calibrations.
+
+In this analysis, while there was some optimization of code-specific parameters for the individual estimators, e.~g.~the number of neighbors used for \code{KNN}, the number of trees used for \code{TPZ}, it was not comprehensive.  In addition, the optimal values will likely change slightly as we refine both our spectroscopic reference sample and our photometric inputs.  A thorough exploration of the code parameters will happen as we converge on our final photometric and spectroscopic setup.
+
+As stated in the introduction, we expect feedback from science users as they explore the data and discover issues that we have not anticipated, and that we will incorporate that feedback in future work.
+]]]
+Key takeaway: while very promising, these results are far from final, there is ongoing work to optimize \photoz performance.  We have plans in place and will continue to refine as new data arrives, and these plans should lead to improved redshift performance. 
+
+\pagebreak
+
+\appendix
 
 \section{Data Products}
 \label{sec:products:0}
