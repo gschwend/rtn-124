@@ -595,7 +595,9 @@ A tutorial notebook with examples for all \code{pzserver} methods is available o
 \subsection{Distribution via LSDB}
 \label{sec:distribution:lsdb}
 
-The Large Survey DataBase (LSDB) will host the DP2 data on the Rubin Science Platform (RSP) and Canadian IDAC. The DP2 data will be turned into Hierarchical Adaptive Tiling Scheme (HATS) format. LSDB enables researchers to load large datasets with limited memory, and fast cross match to other surveys like DESI DR1 and GAIA DR3. 
+The DP2 data is published in Hierarchical Adaptive Tiling Scheme (HATS) format on the Rubin Science Platform (RSP). HATS data can be read with any Parquet reader, but 
+the LSDB package \citep{2025arXiv250102103C} enables loading large datasets with limited memory, performing efficent all-sky analysis, and fast cross matching to other surveys like DESI DR1 and Gaia DR3.
 
-The photo-z point estimates (mean, mode, median and ``best''), 1 and 2 sigma redshift intervals for DP2 object catalog will be served as tabular catalogs in the LSDB. The location on the RSP for this catalog is \texttt{/rubin/lsdb\_data/dp2/object/object\_photoz}. 
+The photo-z point estimates (mean, mode, median and ``best''), 1 and 2 sigma redshift intervals for DP2 object catalog are served as tabular catalogs in the HATS format.
+The location on the RSP for this catalog is \texttt{/rubin/lsdb\_data/dp2/object\_photoz}. 
 
