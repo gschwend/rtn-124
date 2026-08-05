@@ -311,6 +311,26 @@ We evaluated all the algorithms listed in Tab.~\ref{tab:alg} for both scientific
 \subsection{Redshift estimator performance}
 
 
+\subsubsection{Point-estimate performance}
+\label{sec:performance:pz:point}
+
+In Fig.~\ref{fig:zbest_zref_6band} and Fig.~\ref{fig:zbest_zref_4band}, we show the $z_{\rm best}$ point estimate versus the reference redshift $z_{\rm ref}$ for the six algorithms that go into the DP2 production --- \code{FlexZBoost}, \code{KNN}, \code{DNF}, \code{TPZ}, \code{GPz}, and \code{BPZ} --- evaluated on the six-band and four-band DP2 test sets, respectively.  For each algorithm we quote the bias $\langle \Delta z \rangle$, the scatter $\sigma_{\rm NMAD}$, and the catastrophic outlier fraction ($|\Delta z| > 0.15$), where $\Delta z = (z_{\rm best} - z_{\rm ref})/(1 + z_{\rm ref})$.  We find that all six algorithms perform normally, with the bulk of the objects concentrated along the one-to-one relation and small biases $|\langle \Delta z \rangle| \lesssim 0.025$ in both the six-band and four-band configurations.  Among the six, \code{FlexZBoost} achieves the best scatter ($\sigma_{\rm NMAD} = 0.033$ for six-band and $0.038$ for four-band), while \code{TPZ} achieves the best catastrophic outlier fraction ($11.9\%$ for six-band and $14.4\%$ for four-band).  As expected, the performance of every algorithm is somewhat degraded in the four-band configuration relative to the six-band one, reflecting the reduced color information.
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=\linewidth]{figures/zbest_vs_zref_6band.png}
+    \caption{Two-dimensional histograms of the $z_{\rm best}$ point estimate versus the reference redshift $z_{\rm ref}$ for the six production algorithms (\code{FlexZBoost}, \code{KNN}, \code{DNF}, \code{TPZ}, \code{GPz}, \code{BPZ}), evaluated on the six-band DP2 test set.  The color scale shows the object counts per pixel on a logarithmic scale.  The dashed line marks the one-to-one relation, and the dotted lines mark the $|\Delta z| = 0.15$ catastrophic outlier boundaries.  The inset in each panel lists the bias $\langle \Delta z \rangle$, the scatter $\sigma_{\rm NMAD}$, and the outlier fraction.}
+    \label{fig:zbest_zref_6band}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=\linewidth]{figures/zbest_vs_zref_4band.png}
+    \caption{As Fig.~\ref{fig:zbest_zref_6band}, but for the four-band ($griz$) DP2 test set.}
+    \label{fig:zbest_zref_4band}
+\end{figure*}
+
+
 \subsubsection{Redshift estimation quality flags}
 \label{sec:performance:pz:flag}
 
