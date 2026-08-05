@@ -5,33 +5,33 @@ The Vera C. Rubin Observatory's Data Preview 2 (DP2) represents a
 significant step forward in preparation for the upcoming Leugacy Survey
 of Space and Time (LSST), providing an essential testbed for
 scientific tools and analytical pipelines using precursor imaging
-data~\cite{DMTN-095}. A central goal of LSST is estimating photometric
-redshifts (photo-𝑧s) for billions of galaxies, supporting
+data~\citep{DMTN-095}. A central goal of LSST is estimating photometric
+redshifts (\photozs) for billions of galaxies, supporting
 extragalactic astrophysical research and cosmological studies that
 depend on reliable redshift measurements and distributions. In support
 of this objective, the Rubin project established a strategic plan for
-delivering high-quality photo-𝑧s to the research
-community~\cite{DMTN-049}.  
+delivering high-quality \photozs  to the research
+community~\citep{DMTN-049}.  
 
-While photo-𝑧 estimates are not part of the official Data Preview 1
+While \photoz estimates are not part of the official Data Preview 1
 (DP1) or DP2 data products, the "Photo-z Science Unit" undertook the
-task of producing photo-𝑧 values for all galaxies in DP2 using
+task of producing \photoz values for all galaxies in DP2 using
 available multi-band imaging data on a best-effort basis, establishing
 a foundation for future large-scale implementations.   This science
-unit delivered redshifts for DP1\cite{Charles2025sitcomtn154, dp1_paper}.
+unit delivered redshifts for DP1\citep{Charles2025sitcomtn154, dp1_paper}.
 
 For this purpose, we used the RAIL (Redshift Assessment
 Infrastructure Layers) software framework, a versatile and modular
-tool developed for photo-𝑧 estimation and
-validation~\cite{RAIL}. In particular, we leveraged RAIL to
-train photo-𝑧 estimation models using high-quality spectroscopic
+tool developed for \photoz estimation and
+validation~\citep{RAIL}. In particular, we leveraged RAIL to
+train \photoz estimation models using high-quality spectroscopic
 redshift training samples matched to the DP2 photometric catalog.
 
-This document presents the resulting best-effort photo-𝑧 catalogs,
+This document presents the resulting best-effort \photoz catalogs,
 which should be considered highly preliminary, along with the
 methodologies and procedures employed to create them. Furthermore, we
 discuss key characteristics of the DP2 photometric data, the
-spectroscopic calibration samples, and the resulting photo-𝑧
+spectroscopic calibration samples, and the resulting\photoz 
 catalogs. Supplementary information regarding data products and
 distribution is provided in the appendices.
 
@@ -55,7 +55,7 @@ Critically, the fields selected for commisioning observation included several ca
 \subsubsection{Preparation of photometric object catalogs}
 \label{sec:data:dp2:preparation}
 
-The Rubin Data Management (Rubin DM) pipeline measures multiple types of object photometry, the first stage in creating a \photoz catalog was to determine which measured photometry we would use as inputs.  In this note, we generally use the 1.0 arc-second Gaussian Aperture fluxes and their associated errors, e.~g.~\texttt{u\_gaap1p0Flux} and \texttt{u\_gaap1p0FluxErr}.  These fluxes should provide good measures of consistent galaxy colors within the defined aperture, ideal for \photoz estimation, though they may not necessarily reflect the colors of the overall galaxy if there is a significant color gradient and the galaxy is larger than the 1.0 arc-second aperture.  This choice of photometric measurement may not be ideal, and investigation into the optimized set of photometric inputs will continue into the future.   This is similar to studies done with DP1 and described in the associated technote and paper~\cite{Charles2025sitcomtn154, dp1_pz_paper}.
+The Rubin Data Management (Rubin DM) pipeline measures multiple types of object photometry, the first stage in creating a \photoz catalog was to determine which measured photometry we would use as inputs.  In this note, we generally use the 1.0 arc-second Gaussian Aperture fluxes and their associated errors, e.~g.~\texttt{u\_gaap1p0Flux} and \texttt{u\_gaap1p0FluxErr}.  These fluxes should provide good measures of consistent galaxy colors within the defined aperture, ideal for \photoz estimation, though they may not necessarily reflect the colors of the overall galaxy if there is a significant color gradient and the galaxy is larger than the 1.0 arc-second aperture.  This choice of photometric measurement may not be ideal, and investigation into the optimized set of photometric inputs will continue into the future.   This is similar to studies done with DP1 and described in the associated technote and paper~\citep{Charles2025sitcomtn154, dp1_pz_paper}.
 
 The DP2 imaging is highly inhomogeneous in both depth and band coverage, which directly shapes how we prepare the catalogs and train our models.  In Fig.~\ref{fig:dp2_depth}, we show the median $5\sigma$ extended-source depth in the $i$ band, derived from the 1.0 arc-second GAaP fluxes, for each of the 1391 tracts in DP2.  The median depth across the footprint is $24.27$~mag, but the tract-to-tract variation is large, spanning roughly $23.5$ to $25.5$~mag.  In addition, not all tracts are observed in all six bands: as shown in the bottom panel of Fig.~\ref{fig:dp2_depth}, 931 tracts have full six-band ($ugrizy$) coverage while 460 tracts are observed in only four bands ($griz$).  Because the available bands set the input features for \photoz estimation, we cannot apply a single model uniformly across the footprint.  We therefore train, for each algorithm in this work, one model on the six-band tracts and a separate model on the four-band tracts, and apply each model to the corresponding subset of the footprint.  We note that the large depth variation implies that the effective magnitude limit and hence the \photoz quality also varies across the footprint.
 
@@ -70,11 +70,11 @@ The DP2 imaging is highly inhomogeneous in both depth and band coverage, which d
 Preparing object catalog~\citep{RubinObs2025DP1} data for \photoz algorithm training and estimation included five steps:
 
 \begin{enumerate}
-\item{Applying quality cuts to the object catalog.   We developed selections for the training and test datasets (\selection{match\_xxx}), and two additional selections for full DP2 catalogs: one applicable for fields with observations in only four bands (\selection{dp2\_4band}, requiring at 'griz' $< 23mag,$  the other for fields with observations in all six bands (\selection{dp2\_6band}, requiring 'ugrizy' $< 22mag$).}
+\item{Applying quality cuts to the object catalog.   We developed a selection for the training and test datasets and two additional selections for full DP2 catalogs: one applicable for fields with observations in only four bands (\selection{dp2\_4band}, requiring pre-tract median depth in 'griz' $< 23mag$  the other for fields with observations in all six bands (\selection{dp2\_6band}, requiring pre-tract median depth in 'ugrizy' $< 22mag$).}
 \item{Converting fluxes in nJy to AB magnitudes ($m_{\rm AB} = -2.5 \log_{10}(f_\nu / \text{nJy}) + 31.4$)}
 \item{De-reddening to account for Galactic dust.  We use the SFD dust maps\citep{SFD}.}
 \item{Cross-matching objects with reference catalogs that include redshift information as described in Sec.~\ref{sec:data:reference}.}
-\item{Shuffling and splitting the resulting catalog into \texttt{training} and \texttt{test} data sets.}
+\item{Shuffling and splitting the resulting catalog into \texttt{dp2\_v3p1\_training} and \texttt{dp2\_v3p1\_test} data sets.}
 \end{enumerate}
 
 \subsubsection{Data properties}
@@ -82,36 +82,36 @@ Preparing object catalog~\citep{RubinObs2025DP1} data for \photoz algorithm trai
 
 
 We have developed tools to generate diagnostic plots of both the input object catalogs and the \photoz estimates as part of our data analysis.
-Fig.~\ref{fig:dp_mags} shows histograms of the AB magnitudes in 1.0 arc-second apertures of objects in the \dataset{test\_v1} dataset, which includes an explicit magnitude cut, $m_{i} < 26.0$.
-Fig.~\ref{fig:dp_mag_i_v_redshift} shows the correlation between magnitude and redshift for all objects in the \dataset{test\_v1} data set.  
+Fig.~\ref{fig:dp_mags} shows histograms of the AB magnitudes in 1.0 arc-second apertures of objects in the \texttt{dp2\_v3p1\_test} dataset, which includes an explicit magnitude cut, $m_{i} < 26.0$.
+Fig.~\ref{fig:dp_mag_i_v_redshift} shows the correlation between magnitude and redshift for all objects in the \texttt{dp2\_v3p1\_test} data set.  
 Fig.~\ref{fig:dp_color_v_redshift} shows the ``adjacent band colors'', i.e., $u-g$, $g-r$, $r-i$, $i-z$, $z-y$ versus redshift for the same, with a series of SED templates (as used by template-fitting algorithms, see Sec.~\ref{sec:method:template}) overlaid.  
 Finally, Fig.~\ref{fig:dp_color_v_color} shows the color-color plots for the same adjacent colors.  In all cases, the 1.0 arc-second aperture magnitudes are used for plotting.
 
 \begin{figure*}
     \centering
     \includegraphics[width=\linewidth]{figures/mags_v2.pdf}
-    \caption{1.0 arc-second Gaussian Aperture (Gaap) magnitudes (in AB system) of objects in each of the six Rubin filter bands in the \dataset{test\_v1} dataset.  These aperture magnitudes were used as the inputs for the \photoz algorithms.}
+    \caption{1.0 arc-second Gaussian Aperture (Gaap) magnitudes (in AB system) of objects in each of the six Rubin filter bands in the \texttt{dp2\_v3p1\_test} dataset.  These aperture magnitudes were used as the inputs for the \photoz algorithms.}
     \label{fig:dp_mags}
 \end{figure*}
 
 \begin{figure*}
     \centering
     \includegraphics[width=\linewidth]{figures/mag_i_v_redshift.pdf}
-    \caption{1.0 arc-second Gaussian Aperture (Gaap) i-band magnitude versus redshift for all objects in the \dataset{test\_v1} dataset.}
+    \caption{1.0 arc-second Gaussian Aperture (Gaap) i-band magnitude versus redshift for all objects in the \texttt{dp2\_v3p1\_test} dataset.}
     \label{fig:dp_mag_i_v_redshift}
 \end{figure*}
 
 \begin{figure*}
     \centering
     \includegraphics[height=7in]{figures/color_v_redshift.pdf}
-    \caption{``Adjacent band colors'', i.e., $u-g$, $g-r$, $r-i$, $i-z$, $z-y$, in 1.0 arc-second apertures versus redshift for all objects in the test dataset.  Colored lines represent the expected colors for the eight ``CWWSB'' SEDs described in Sec.~\ref{sec:method:template}, and should very roughly show the predicted range of color evolution expected for our galaxy sample.  The bottom right plot shows a histogram of the redshifts in the test dataset.}
+    \caption{``Adjacent band colors'', i.e., $u-g$, $g-r$, $r-i$, $i-z$, $z-y$, in 1.0 arc-second apertures versus redshift for all objects in the \texttt{dp2\_v3p1\_test}  dataset.  Colored lines represent the expected colors for the eight ``CWWSB'' SEDs described in Sec.~\ref{sec:method:template}, and should very roughly show the predicted range of color evolution expected for our galaxy sample.  The bottom right plot shows a histogram of the redshifts in the test dataset.}
     \label{fig:dp_color_v_redshift}
 \end{figure*}
 
 \begin{figure*}
     \centering
     \includegraphics[width=\linewidth]{figures/color_v_color.pdf}
-    \caption{Color-color plots for all objects in the `\dataset{test\_v1} dataset.  Colored lines represent the expected colors for the eight ``CWWSB'' SEDs described in Sec.~\ref{sec:method:template}, and should very roughly show the predicted color evolution expected for our galaxy sample.}
+    \caption{Color-color plots for all objects in the \texttt{dp2\_v3p1\_test} dataset.  Colored lines represent the expected colors for the eight ``CWWSB'' SEDs described in Sec.~\ref{sec:method:template}, and should very roughly show the predicted color evolution expected for our galaxy sample.}
     \label{fig:dp_color_v_color}
 \end{figure*}
 
@@ -125,7 +125,7 @@ We first build a spectroscopic reference sample within the DP2 footprint by conc
 
 \begin{table}[htbp]
 \centering
-\caption{Composition of the reference redshift catalog after cross-matching against the DP2 object catalog.  $N$ is the number of cross-matched objects and $\bar{z}$ is the median redshift.  Type codes: s = spectroscopic, p = many-band photo-$z$, g = grism.  Surveys with fewer than 100 objects are grouped in the ``Other'' row.}
+\caption{Composition of the reference redshift catalog after cross-matching against the DP2 object catalog.  $N$ is the number of cross-matched objects and $\bar{z}$ is the median redshift.  Type codes: s = spectroscopic, p = many-band \photozs, g = grism.  Surveys with fewer than 100 objects are grouped in the ``Other'' row.}
 \label{tab:dp2_refcat}
 \begin{tabular}{llrr}
 \hline\hline
@@ -142,7 +142,7 @@ VIPERS PDR2         & s &    15{,}497 & 0.67 \\
 OzDES               & s &    15{,}027 & 0.51 \\
 DEEP2               & s &     7{,}876 & 0.98 \\
 2dFGRS              & s &     7{,}684 & 0.11 \\
-JADES DR5 (photo-z) & p &     7{,}383 & 1.70 \\
+JADES DR5 (\photoz) & p &     7{,}383 & 1.70 \\
 HELP DMU23          & p &     7{,}005 & 0.45 \\
 ASTRODEEP-JWST      & p &     6{,}382 & 1.57 \\
 COSMOS-Web          & p &     5{,}799 & 1.00 \\
@@ -523,7 +523,7 @@ To support both the Rubin community and the DESC, we will distribute these data 
 In each of these distribution mechanisms there are a number of metadata that are used as fields in defining specific data products.  In particular:
 
 \begin{itemize}
-\item{\textbf{algo}: specifies a particular photo-z estimation algorithm (see Tab.~\ref{tab:alg}),}
+\item{\textbf{algo}: specifies a particular \photoz estimation algorithm (see Tab.~\ref{tab:alg}),}
 \item{\textbf{selection}: specifies a particular data selection (see Sec.~\ref{sec:data:dp2:preparation}),}
 \item{\textbf{flavor}: specifies a particular set of configuration parameters,}
 \item{\textbf{dataset}: specifies a particular dataset (e.g. dp2).}
@@ -598,6 +598,6 @@ A tutorial notebook with examples for all \code{pzserver} methods is available o
 The DP2 data is published in Hierarchical Adaptive Tiling Scheme (HATS) format on the Rubin Science Platform (RSP). HATS data can be read with any Parquet reader, but 
 the LSDB package \citep{2025arXiv250102103C} enables loading large datasets with limited memory, performing efficent all-sky analysis, and fast cross matching to other surveys like DESI DR1 and Gaia DR3.
 
-The photo-z point estimates (mean, mode, median and ``best''), 1 and 2 sigma redshift intervals for DP2 object catalog are served as tabular catalogs in the HATS format.
+The \photoz  point estimates (mean, mode, median and ``best''), 1 and 2 sigma redshift intervals for DP2 object catalog are served as tabular catalogs in the HATS format.
 The location on the RSP for this catalog is \texttt{/rubin/lsdb\_data/dp2/object\_photoz}. 
 
