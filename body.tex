@@ -343,6 +343,19 @@ Applying a simple cut on the RMS of the $p(z)$ distribution can dramatically red
 \end{figure*}
 
 
+\subsection{Redshift estimates across the footprint}
+\label{sec:performance:footprint}
+
+In Fig.~\ref{fig:tract_zbest}, we show the mean \code{FlexZBoost} $z_{\rm best}$ point estimate in each DP2 tract, projected onto a Mollweide map of the survey footprint.  The map aggregates the point estimates of $651{,}640{,}921$ objects across the 1391 recommended tracts.  We observe that the mean estimated redshift varies substantially across the footprint, from $\sim 0.4$ in the shallowest tracts to $\sim 1.4$ in the deepest.  This variation closely tracks the tract-to-tract depth variation shown in Fig.~\ref{fig:dp2_depth}: deeper tracts detect fainter and, on average, higher-redshift galaxies, and therefore have a higher mean estimated redshift, whereas shallower tracts are limited to brighter, lower-redshift objects.  We note that this spatial pattern is therefore primarily a selection effect driven by the varying imaging depth (and band coverage) across the footprint, rather than a physical redshift gradient, and it should be accounted for when using the DP2 \photoz catalogs for any spatially resolved analysis.
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=0.9\linewidth]{figures/tract_mean_zbest_mollweide.png}
+  \caption{Mean \code{FlexZBoost} $z_{\rm best}$ point estimate in each DP2 tract, shown on a Mollweide projection of the footprint (astronomical convention, with right ascension increasing to the left).  The color scale runs from $\sim 0.4$ (dark) to $\sim 1.4$ (bright).  The map aggregates $651{,}640{,}921$ objects across the 1391 recommended tracts (931 with six-band and 460 with four-band coverage).  The mean estimated redshift varies across the footprint following the imaging-depth variation of Fig.~\ref{fig:dp2_depth}.}
+  \label{fig:tract_zbest}
+\end{figure*}
+
+
 \subsection{Technical performance}
 \label{sec:performance:technical}
 
