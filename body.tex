@@ -63,7 +63,7 @@ The DP2 imaging is highly inhomogeneous in both depth and band coverage, which d
   \centering
   \includegraphics[width=\linewidth]{figures/footprint_iband_gaap_ext_depth_mollweide.png}
   \includegraphics[width=\linewidth]{figures/footprint_iband_depth_band_outlines_mollweide.png}
-    \caption{The DP2 survey footprint shown in a Mollweide projection.  \textit{Top panel:} the median $5\sigma$ extended-source depth in the $i$ band, computed from the 1.0 arc-second GAaP fluxes, for each of the 1391 tracts in DP2.  The color scale (bottom) runs from $\sim 23.5$ to $\sim 25.5$~mag, and the median depth across the footprint is $24.27$~mag.  The depth varies substantially from tract to tract.  \textit{Bottom panel:} the same depth map, with tracts outlined according to their band coverage --- the red outline marks the 931 tracts with full six-band ($ugrizy$) photometry, and the black outline marks the 460 tracts with only four-band ($griz$) photometry.  For each algorithm in this work we train one model on the six-band tracts and a separate model on the four-band tracts.}
+    \caption{The DP2 survey footprint shown in a Mollweide projection.  \textit{Top panel:} the median $5\sigma$ extended-source depth in the $i$ band, computed from the 1.0 arc-second GAaP fluxes, for each of the 1391 tracts in DP2.  The color scale (bottom) runs from $\sim 23.5$ to $\sim 25.5$~mag, and the median depth across the footprint is $24.27$~mag.  The depth varies substantially from tract to tract.  \textit{Bottom panel:} the same depth map, with tracts outlined according to their band coverage, the red outline marks the 931 tracts with full six-band ($ugrizy$) photometry, and the black outline marks the 460 tracts with only four-band ($griz$) photometry.  For each algorithm in this work we train one model on the six-band tracts and a separate model on the four-band tracts.}
     \label{fig:dp2_depth}
 \end{figure*}
 
@@ -121,7 +121,7 @@ Finally, Fig.~\ref{fig:dp_color_v_color} shows the color-color plots for the sam
 
 The \photoz estimation algorithms in RAIL require highly accurate and precise redshift estimates cross-matched to the DP2 photometric catalog to provide labeled \dataset{training} data sets.  We created such datasets using data drawn from publicly available catalogs, comprising galaxies with known spectroscopic redshifts, grism redshifts, and high-quality \photoz's from deep multi-band imaging.  These training sets enable machine learning models within RAIL to learn the mapping between galaxy colors and redshifts, enabling \photoz estimation for every galaxy detected in DP2.  In this subsection, we describe how we assemble the reference redshift catalog, and how we curate it into the training and test sets used in this work.
 
-We first build a spectroscopic reference sample within the DP2 footprint by concatenating a large compilation of reference redshift catalogs, which we retrieve using the LIneA PZ Server\footnote{\url{https://pzserver.linea.org.br}}.  We then use \textsc{LSDB} to cross-match this compilation against the DP2 object catalog, keeping the nearest photometric counterpart within a fixed matching radius.  The resulting reference set spans both the deep drilling fields --- including COSMOS, ELAIS, ECDFS, and EDFS --- for which many high-quality redshifts exist, and several wide-field spectroscopic surveys, most notably DESI and SDSS.  In Table~\ref{tab:dp2_refcat}, we report the number of cross-matched galaxies contributed by each survey, listing all surveys with more than 100 objects and grouping the remainder into a single ``Other'' row.  The cross-matched catalog is strongly dominated by the wide-field DESI and SDSS spectroscopic samples and the COSMOS deep-field compilations.  In Fig.~\ref{fig:train_radec}, we show the right-ascension--declination distribution of the training galaxies, color-coded by their originating survey.
+We first build a spectroscopic reference sample within the DP2 footprint by concatenating a large compilation of reference redshift catalogs, which we retrieve using the LIneA PZ Server\footnote{\url{https://pzserver.linea.org.br}}.  We then use \textsc{LSDB} to cross-match this compilation against the DP2 object catalog, keeping the nearest photometric counterpart within a fixed matching radius.  The resulting reference set spans both the deep drilling fields, including COSMOS, ELAIS, ECDFS, and EDFS, for which many high-quality redshifts exist, and several wide-field spectroscopic surveys, most notably DESI and SDSS.  In Table~\ref{tab:dp2_refcat}, we report the number of cross-matched galaxies contributed by each survey, listing all surveys with more than 100 objects and grouping the remainder into a single ``Other'' row.  The cross-matched catalog is strongly dominated by the wide-field DESI and SDSS spectroscopic samples and the COSMOS deep-field compilations.  In Fig.~\ref{fig:train_radec}, we show the right-ascension--declination distribution of the training galaxies, color-coded by their originating survey.
 
 \begin{table}[htbp]
 \centering
@@ -314,7 +314,7 @@ We evaluated all the algorithms listed in Tab.~\ref{tab:alg} for both scientific
 \subsubsection{Point-estimate performance}
 \label{sec:performance:pz:point}
 
-In Fig.~\ref{fig:zbest_zref_6band} and Fig.~\ref{fig:zbest_zref_4band}, we show the $z_{\rm best}$ point estimate versus the reference redshift $z_{\rm ref}$ for the six algorithms that go into the DP2 production --- \code{FlexZBoost}, \code{KNN}, \code{DNF}, \code{TPZ}, \code{GPz}, and \code{BPZ} --- evaluated on the six-band and four-band DP2 test sets, respectively.  For each algorithm we quote the bias $\langle \Delta z \rangle$, the scatter $\sigma_{\rm NMAD}$, and the catastrophic outlier fraction ($|\Delta z| > 0.15$), where $\Delta z = (z_{\rm best} - z_{\rm ref})/(1 + z_{\rm ref})$.  We find that all six algorithms perform normally, with the bulk of the objects concentrated along the one-to-one relation and small biases $|\langle \Delta z \rangle| \lesssim 0.025$ in both the six-band and four-band configurations.  Among the six, \code{FlexZBoost} achieves the best scatter ($\sigma_{\rm NMAD} = 0.033$ for six-band and $0.038$ for four-band), while \code{TPZ} achieves the best catastrophic outlier fraction ($11.9\%$ for six-band and $14.4\%$ for four-band).  As expected, the performance of every algorithm is somewhat degraded in the four-band configuration relative to the six-band one, reflecting the reduced color information.
+In Fig.~\ref{fig:zbest_zref_6band} and Fig.~\ref{fig:zbest_zref_4band}, we show the $z_{\rm best}$ point estimate versus the reference redshift $z_{\rm ref}$ for the six algorithms that go into the DP2 production: \code{FlexZBoost}, \code{KNN}, \code{DNF}, \code{TPZ}, \code{GPz}, and \code{BPZ}, evaluated on the six-band and four-band DP2 test sets, respectively.  For each algorithm we quote the bias $\langle \Delta z \rangle$, the scatter $\sigma_{\rm NMAD}$, and the catastrophic outlier fraction ($|\Delta z| > 0.15$), where $\Delta z = (z_{\rm best} - z_{\rm ref})/(1 + z_{\rm ref})$.  We find that all six algorithms perform normally, with the bulk of the objects concentrated along the one-to-one relation and small biases $|\langle \Delta z \rangle| \lesssim 0.025$ in both the six-band and four-band configurations.  Among the six, \code{FlexZBoost} achieves the best scatter ($\sigma_{\rm NMAD} = 0.033$ for six-band and $0.038$ for four-band), while \code{TPZ} achieves the best catastrophic outlier fraction ($11.9\%$ for six-band and $14.4\%$ for four-band).  As expected, the performance of every algorithm is somewhat degraded in the four-band configuration relative to the six-band one, reflecting the reduced color information.
 
 \begin{figure*}
     \centering
@@ -580,11 +580,12 @@ pz_server.display_product_metadata("<product_id>")
 pz_server.download_product("<product_id>", save_in=".")
 \end{verbatim}
 
-Alternatively, it is possible to load a table directly into memory as a Pandas DataFrame or Astropy Table. For instance, to get the Combined Redshift Reference Catalog described above:
 
-\begin{verbatim}
-combined_z_catalog = pz_server.get_product("77_comcam_ecdfs_z_catalog_sitcomtn154")
-\end{verbatim}
+% Alternatively, it is possible to load a table directly into memory as a Pandas DataFrame or Astropy Table. For instance, to get the Combined Redshift Reference Catalog described above:
+
+% \begin{verbatim}
+% combined_z_catalog = pz_server.get_product("77_comcam_ecdfs_z_catalog_sitcomtn154")
+% \end{verbatim}
 
 
 A tutorial notebook with examples for all \code{pzserver} methods is available on the \href{https://github.com/linea-it/pzserver/blob/main/docs/notebooks/pzserver_tutorial.ipynb}{\code{pzserver} library's repository on GitHub}.
@@ -594,6 +595,7 @@ A tutorial notebook with examples for all \code{pzserver} methods is available o
 \subsection{Distribution via LSDB}
 \label{sec:distribution:lsdb}
 
-The Large Survey DataBase (LSDB) will host the DP2 data on the USDF and the Canadian IDAC RSP. The DP2 data will be turned into Hierarchical Adaptive Tiling Scheme (HATS) format. LSDB enables researchers to load large datasets with limited memory, and fast cross match to other surveys like DESI DR1 and GAIA DR3. 
+The Large Survey DataBase (LSDB) will host the DP2 data on the Rubin Science Platform (RSP) and Canadian IDAC. The DP2 data will be turned into Hierarchical Adaptive Tiling Scheme (HATS) format. LSDB enables researchers to load large datasets with limited memory, and fast cross match to other surveys like DESI DR1 and GAIA DR3. 
 
-The photo-z point estimates for DP2 in the \field{ECDFS},\field{EDFS}, \field{Rubin\_SV\_95\_-25}, and \field{Rubin\_SV\_38\_7}  will be served as a single tabular catalog in the LSDB. The location on the USDF for this catalog is \texttt{/sdf/data/rubin/shared/lsdb\_commissioning/dp2\_pz\_hats}. 
+The photo-z point estimates (mean, mode, median and ``best''), 1 and 2 sigma redshift intervals for DP2 object catalog will be served as tabular catalogs in the LSDB. The location on the RSP for this catalog is \texttt{/rubin/lsdb\_data/dp2/object/object\_photoz}. 
+
