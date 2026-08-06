@@ -2,7 +2,7 @@
 \label{sec:intro:0}
 
 The Vera C. Rubin Observatory's Data Preview 2 (DP2) represents a
-significant step forward in preparation for the upcoming Leugacy Survey
+significant step forward in preparation for the upcoming Legacy Survey
 of Space and Time (LSST), providing an essential testbed for
 scientific tools and analytical pipelines using precursor imaging
 data~\citep{RTN-095}. A central goal of LSST is estimating photometric
@@ -49,7 +49,7 @@ integrate this feedback into subsequent efforts.
 
 The Rubin Observatory’s Data Preview 2 dataset is the first public release of Rubin observatory imaging data from the full LSST camera processed through the LSST Science Pipelines~\citep{PSTN-019}, serving as a critical testbed for scientific and technical validation ahead of full LSST operations.  DP2 is based on observations from the LSST camera (LSSTCam) and includes multi-band optical imaging in u, g, r, i, z and y filters over $>$ 1000 square degrees of sky.  The dataset consists of processed images, source catalogs, and associated metadata, all formatted using the Rubin Data Butler system~\citep{2022SPIE12189E..11J}.  Although somewhat smaller in scale than future LSST datasets, DP2 offers realistic photometric measurements, object detection, and data structures, making it an invaluable resource for developing and testing algorithms for tasks such as \photoz estimation, object classification, and data quality assessment.   The DP2 footprint spans several disjoint regions of sky and exhibits substantial variation in imaging depth and band coverage, which we describe in Sec.~\ref{sec:data:dp2:preparation}.
 
-Critically, the fields selected for commisioning observation included several calibration fields, for which many high-quality redshifts exist from other surveys.
+Critically, the fields selected for commissioning observation included several calibration fields, for which many high-quality redshifts exist from other surveys.
 
 
 \subsubsection{Preparation of photometric object catalogs}
@@ -290,7 +290,7 @@ We explored dozens of different configuration settings, covering analysis choice
 After examining the performance of the algorithms under different configurations, we settled on a set of optimized parameters for each algorithm and on the \code{gaap\_1p0} fluxes to produce the best-effort catalogs for DP2.   These optimized configurations parameters are captured in the \href{https://github.com/LSSTDESC/rail_project_config/blob/main/dp2/dp2_v3p1.yaml}{dp2/dp2\_v3p1.yaml} configuration file.
 
 
-\subsection{Production of redshfits catalogs}
+\subsection{Production of redshifts catalogs}
 \label{sec:method:redshift_catalogs}
 
 We also used the \href{https://github.com/lsst-dm/meas_pz}{\code{meas\_pz}} and \href{https://github.com/lsst-dm/meas_pz}{\code{meas\_pz\_extensions}} software packages
@@ -379,7 +379,7 @@ In Fig.~\ref{fig:tract_zbest}, we show the mean \code{FlexZBoost} $z_{\rm best}$
 \subsection{Technical performance}
 \label{sec:performance:technical}
 
-Tables \ref{tab:estimate_times} and \ref{tab:inform_times} show per-object estimation times and the total training time for each algorithm.
+Tables~\ref{tab:estimate_times} and \ref{tab:inform_times} show per-object estimation times and the total training time for each algorithm.  Table~\ref{tab:file_sizes} shows the total size in DP2 of all the \photoz estimates for each algorithm.   We note that no particular efforts to reduce the file sizes have been made, the $p(z)$ estimates are stored using 64-bit floats in uncompressed hdf5 files.   We expect be table to reduce the sizes of the larger files by factors of 8 or more with minimal loss of information.
 
 \begin{table*}
 \centering
@@ -422,6 +422,26 @@ Algorithm & 4 Band (min) & 6 Band (min) \\
 \end{table*}
 
 
+\begin{table*}
+\centering
+\begin{tabular}{lll}
+ \hline
+Algorithm & 4 Band (TB) & 6 Band (TB) \\
+  \hline
+ \code{BPZ} & 1.1 & 1.5 \\
+ \code{DNF} & 1.1 & 1.5 \\
+ \code{FlexZBoost} & 1.1 & 1.5 \\
+ \code{GPz} & 0.05 & 0.06 \\
+ \code{KNN} & 0.15 &  0.19 \\
+ \code{TPZ} & 2.2 & 2.9 \\
+ \hline
+ \hline
+\end{tabular}
+\caption{Total sizes in TB of the DP2 \photoz estimates for each algorithm.   The different in sizes in almost entirely attributable to the different representations used to store the $p(z)$ distributions.}
+\label{tab:file_sizes}
+\end{table*}
+
+
 
 \section{Limitations and caveats}
 \label{sec:limitations:0}
@@ -459,7 +479,7 @@ This note describes an initial calculation of photometric redshifts on the Rubin
 
 However, work will continue on several fronts to further optimize the performance of our redshift predictions.  As mentioned earlier in the note, the definition of the true redshift reference sample used to train our algorithms has a large impact on results, being the ``truth'' used to define the flux/color-to-redshift mapping that is inherent to \photoz estimation.  We will work to refine our reference sample definition, which objects to include/exclude based on quality flags, explore the tradeoffs of including grism and many-band \photoz estimates with larger redshift uncertainties in our training sample, and other such effects.  As more and more Rubin data is taken, areal coverage is increasing, including coverage of additional deep calibration fields with existing spec-z datasets.  This will naturally improve \photoz performance.  Expansion of reference redshifts will also enable the development of improved object flagging for identifying which redshifts are trustworthy and those which are likely to be incorrect.
 
-We will also continue to examine the Rubin photometry and evaluate the performance of multiple measurement algorithms.  In this note we used Gaussian Aperture (Gaap) fluxes and magnitudes, as they are expected to produce consistent colors.  We will undertake a thorough exploration of multiple flux measurements (e.~g.~cModel, Sersic, additional Gaap apertures) to test which combinations lead to the best \photoz estimates, as well as combinations like using multiple aperture magnitudes that may contain information on the galaxy light profile that could help to constrain redshift.  As we are still in the engineering and testing phase of the project, there is ongoing work to characterize system performance, and improved understanding of the system will likely lead to better \photoz performance.  For example, there may be some hints that u-band fluxes are overestimated and u-band uncertainties underestimated at faint magnitudes (see the high redshift u-g colors in Fig.~\ref{fig:dp_color_v_redshift} and figures in~\citet{RTN-095}).   DP2 data was obtained using LSSTCam during commisioning while future data releases will use LSSTCam data from survey operations, and thus performance for DR1 and beyond may be shaped by improvements in operations, data reduction and photometric calibrations.
+We will also continue to examine the Rubin photometry and evaluate the performance of multiple measurement algorithms.  In this note we used Gaussian Aperture (Gaap) fluxes and magnitudes, as they are expected to produce consistent colors.  We will undertake a thorough exploration of multiple flux measurements (e.~g.~cModel, Sersic, additional Gaap apertures) to test which combinations lead to the best \photoz estimates, as well as combinations like using multiple aperture magnitudes that may contain information on the galaxy light profile that could help to constrain redshift.  As we are still in the engineering and testing phase of the project, there is ongoing work to characterize system performance, and improved understanding of the system will likely lead to better \photoz performance.  For example, there may be some hints that u-band fluxes are overestimated and u-band uncertainties underestimated at faint magnitudes (see the high redshift u-g colors in Fig.~\ref{fig:dp_color_v_redshift} and figures in~\citet{RTN-095}).   DP2 data was obtained using LSSTCam during commissioning while future data releases will use LSSTCam data from survey operations, and thus performance for DR1 and beyond may be shaped by improvements in operations, data reduction and photometric calibrations.
 
 In this analysis, while there was some optimization of code-specific parameters for the individual estimators, e.~g.~the number of neighbors used for \code{KNN}, the number of trees used for \code{TPZ}, it was not comprehensive.  In addition, the optimal values will likely change slightly as we refine both our spectroscopic reference sample and our photometric inputs.  A thorough exploration of the code parameters will happen as we converge on our final photometric and spectroscopic setup.
 
@@ -639,8 +659,22 @@ A tutorial notebook with examples for all \code{pzserver} methods is available o
 \label{sec:distribution:lsdb}
 
 The DP2 data is published in Hierarchical Adaptive Tiling Scheme (HATS) format on the Rubin Science Platform (RSP). HATS data can be read with any Parquet reader, but 
-the LSDB package \citep{2025arXiv250102103C} enables loading large datasets with limited memory, performing efficent all-sky analysis, and fast cross matching to other surveys like DESI DR1 and Gaia DR3.
+the LSDB package \citep{2025arXiv250102103C} enables loading large datasets with limited memory, performing efficient all-sky analysis, and fast cross matching to other surveys like DESI DR1 and Gaia DR3.
 
 The \photoz  point estimates (mean, mode, median and ``best''), 1 and 2 sigma redshift intervals for DP2 object catalog are served as tabular catalogs in the HATS format.
 The location on the RSP for this catalog is \texttt{/rubin/lsdb\_data/dp2/object\_photoz}. 
 
+
+%  LocalWords:  citep photozs photoz Charles2025sitcomtn154 texttt qp
+%  LocalWords:  subsubsection texttt _gaap1p0FluxErr dp1_pz_paper GPz
+%  LocalWords:  fig:dp2_depth ugrizy includegraphics linewidth textit
+%  LocalWords:  fig:dp_mags fig:dp_mag_i_v_redshift grism textsc llrr
+%  LocalWords:  fig:dp_color_v_redshift fig:dp_color_v_color hline qp
+%  LocalWords:  tab:dp2_refcat fig:train_radec hline _pretrain citet
+%  LocalWords:  fig:train_dist Kohonen1982 fig:test_dist rail-bpz _pz
+%  LocalWords:  rail-sklearn rail-dnf FlexZBoost Almosallam:2016 _bpz
+%  LocalWords:  rail-lephare rail-tpz Lephare Ilbert:09 _bpz _bpz qp
+%  LocalWords:  fig:zbest_zref_6band fig:zbest_zref_4band langle hdf5
+%  LocalWords:  lesssim fig:hist_dz_cut fig:tract_zbest Sersic qp qp
+%  LocalWords:  qp textbf th th biweighted nclip biweight biweight pz
+%  LocalWords:  pretrained pzModel pzserver Astropy
