@@ -5,7 +5,7 @@ The Vera C. Rubin Observatory's Data Preview 2 (DP2) represents a
 significant step forward in preparation for the upcoming Leugacy Survey
 of Space and Time (LSST), providing an essential testbed for
 scientific tools and analytical pipelines using precursor imaging
-data~\citep{DMTN-095}. A central goal of LSST is estimating photometric
+data~\citep{RTN-095}. A central goal of LSST is estimating photometric
 redshifts (\photozs) for billions of galaxies, supporting
 extragalactic astrophysical research and cosmological studies that
 depend on reliable redshift measurements and distributions. In support
@@ -70,7 +70,7 @@ The DP2 imaging is highly inhomogeneous in both depth and band coverage, which d
 Preparing object catalog~\citep{RubinObs2025DP1} data for \photoz algorithm training and estimation included five steps:
 
 \begin{enumerate}
-\item{Applying quality cuts to the object catalog.   We developed a selection for the training and test datasets and two additional selections for full DP2 catalogs: one applicable for fields with observations in only four bands (\selection{dp2\_4band}, requiring pre-tract median depth in 'griz' $< 23mag$  the other for fields with observations in all six bands (\selection{dp2\_6band}, requiring pre-tract median depth in 'ugrizy' $< 22mag$).}
+\item{Applying quality cuts to the object catalog.   We developed a selection for the training and test datasets and two additional selections for full DP2 catalogs: one applicable for fields with observations in only four bands (\selection{dp2\_4band}, requiring per-tract median depth in 'griz' $< 23mag$  the other for fields with observations in all six bands (\selection{dp2\_6band}, requiring per-tract median depth in 'ugrizy' $< 22mag$).}
 \item{Converting fluxes in nJy to AB magnitudes ($m_{\rm AB} = -2.5 \log_{10}(f_\nu / \text{nJy}) + 31.4$)}
 \item{De-reddening to account for Galactic dust.  We use the SFD dust maps\citep{SFD}.}
 \item{Cross-matching objects with reference catalogs that include redshift information as described in Sec.~\ref{sec:data:reference}.}
