@@ -8,5 +8,6 @@
 *.xdv
 *.dvi
 *.pdf
+.DS_Store
 authors.tex
 CLAUDE.md
