@@ -379,6 +379,49 @@ In Fig.~\ref{fig:tract_zbest}, we show the mean \code{FlexZBoost} $z_{\rm best}$
 \subsection{Technical performance}
 \label{sec:performance:technical}
 
+Tables \ref{tab:estimate_times} and \ref{tab:inform_times} show per-object estimation times and the total training time for each algorithm.
+
+\begin{table*}
+\centering
+\begin{tabular}{lll}
+ \hline
+Algorithm & 4 Band (ms/obj) & 6 Band (ms/obj) \\
+  \hline
+ \code{BPZ} & 15.95 & 18.29 \\
+ \code{DNF} & 1.86 & 2.25 \\ 
+ \code{FlexZBoost} & 1.27& 1.34 \\
+ \code{GPz} & 0.03 & 0.03 \\
+ \code{KNN} & 1.04 & 0.46 \\ 
+ \code{LePHARE} & 229.43 & 253.14 \\ 
+ \code{TPZ} & 4.17& 3.88 \\
+ \hline
+ \hline
+\end{tabular}
+\caption{Per-object estimation times for each of the algorithms for both 4-band and 6-band data in ms.}
+\label{tab:estimate_times}
+\end{table*}
+
+\begin{table*}
+\centering
+\begin{tabular}{lll}
+ \hline
+Algorithm & 4 Band (min) & 6 Band (min) \\
+  \hline
+ \code{BPZ} & 0.01 & 0.01\\
+ \code{DNF} & 0.01 & 0.02\\
+ \code{FlexZBoost} & 2.74 & 2.81\\
+ \code{GPz} & 76.27 & 107.04\\
+ \code{KNN} & 45.10 & 48.46\\
+ \code{LePHARE} & 25.20 & 27.44\\
+ \code{TPZ} & 2.68 & 2.71\\
+ \hline
+ \hline
+\end{tabular}
+\caption{Times to inform (i.e., train) each of the algorithms for both 4-band and 6-band data in minutes.   There were 554676 objects in the training data set.}
+\label{tab:inform_times}
+\end{table*}
+
+
 
 \section{Limitations and caveats}
 \label{sec:limitations:0}
