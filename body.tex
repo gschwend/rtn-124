@@ -11,7 +11,7 @@ extragalactic astrophysical research and cosmological studies that
 depend on reliable redshift measurements and distributions. In support
 of this objective, the Rubin project established a strategic plan for
 delivering high-quality \photozs  to the research
-community~\citep{DMTN-049}.  
+community~\citep{DMTN-049}.
 
 While \photoz estimates are not part of the official Data Preview 1
 (DP1) or DP2 data products, the "Photo-z Science Unit" undertook the
@@ -31,7 +31,7 @@ This document presents the resulting best-effort \photoz catalogs,
 which should be considered highly preliminary, along with the
 methodologies and procedures employed to create them. Furthermore, we
 discuss key characteristics of the DP2 photometric data, the
-spectroscopic calibration samples, and the resulting\photoz 
+spectroscopic calibration samples, and the resulting\photoz
 catalogs. Supplementary information regarding data products and
 distribution is provided in the appendices.
 
@@ -83,8 +83,8 @@ Preparing object catalog~\citep{RubinObs2025DP1} data for \photoz algorithm trai
 
 We have developed tools to generate diagnostic plots of both the input object catalogs and the \photoz estimates as part of our data analysis.
 Fig.~\ref{fig:dp_mags} shows histograms of the AB magnitudes in 1.0 arc-second apertures of objects in the \texttt{dp2\_v3p1\_test} dataset, which includes an explicit magnitude cut, $m_{i} < 26.0$.
-Fig.~\ref{fig:dp_mag_i_v_redshift} shows the correlation between magnitude and redshift for all objects in the \texttt{dp2\_v3p1\_test} data set.  
-Fig.~\ref{fig:dp_color_v_redshift} shows the ``adjacent band colors'', i.e., $u-g$, $g-r$, $r-i$, $i-z$, $z-y$ versus redshift for the same, with a series of SED templates (as used by template-fitting algorithms, see Sec.~\ref{sec:method:template}) overlaid.  
+Fig.~\ref{fig:dp_mag_i_v_redshift} shows the correlation between magnitude and redshift for all objects in the \texttt{dp2\_v3p1\_test} data set.
+Fig.~\ref{fig:dp_color_v_redshift} shows the ``adjacent band colors'', i.e., $u-g$, $g-r$, $r-i$, $i-z$, $z-y$ versus redshift for the same, with a series of SED templates (as used by template-fitting algorithms, see Sec.~\ref{sec:method:template}) overlaid.
 Finally, Fig.~\ref{fig:dp_color_v_color} shows the color-color plots for the same adjacent colors.  In all cases, the 1.0 arc-second aperture magnitudes are used for plotting.
 
 \begin{figure*}
@@ -242,10 +242,10 @@ As part of the Rubin \photoz roadmap process, \code{KNN} and \code{BPZ} were cho
     Algorithm name  & Home package & Reference\\
  \hline
  \hline
- \multicolumn{3}{c}{Project Supported Testing} \\ 
+ \multicolumn{3}{c}{Project Supported Testing} \\
   \code{BPZ} & \href{https://github.com/LSSTDESC/rail_bpz}{\code{rail-bpz}} & \citet{Benitez:2000}\\
  \code{KNN} & \href{https://github.com/LSSTDESC/rail_sklearn}{\code{rail-sklearn}} & \citet{RAIL} \\
- \multicolumn{3}{c}{Community Supported} \\   
+ \multicolumn{3}{c}{Community Supported} \\
  \code{DNF} & \href{https://github.com/LSSTDESC/rail_dnf}{\code{rail-dnf}} & \citet{2016MNRAS.459.3078D}\\
  \code{FlexZBoost}  & \href{https://github.com/LSSTDESC/rail_flexzboost}{\code{rail-flexzboost}} & \citet{Izbicki:2017}\\
  \code{GPz} & \href{https://github.com/LSSTDESC/rail_gpz_v1}{\code{rail-gpz-v1}} & \citet{Almosallam:2016}\\
@@ -263,7 +263,7 @@ Summary of the pre-wrapped estimators/summarizers/classifiers used in this paper
 \subsection{Template fitting based estimators}
 \label{sec:method:template}
 
-RAIL’s template-based fitting algorithms (\code{Lephare} and \code{BPZ}, see references in Tab.~\ref{tab:alg} for more details) estimate photometric redshifts by comparing observed galaxy photometry to a set of predefined theoretical or empirical galaxy templates.  These templates represent a range of galaxy spectral energy distributions (SEDs) that are meant to span the expected range of galaxy types observed in the Universe.  Synthetic model fluxes are computed by red-shifting each SED to a set grid of values and convolving with the Rubin filter curves,  which characterizes the expected variation in observed colors with redshift.  Our algorithms calculate the chi-square/likelihood for each SED at each grid point by comparing the model fluxes in our photometric bands to the observed fluxes and uncertainties.  This process enables the algorithm to determine the relative likelihood for each redshift for a given galaxy by identifying the template that best matches its observed color signature.  An optional empirical Bayesian prior can also be applied to produce a posterior probability rather than a straight likelihood if information on the expected distributions are available.  The training phase for these algorithms consist mostly of preparing pre-computed tables for the expected fluxes in each filter band for each SED template. 
+RAIL’s template-based fitting algorithms (\code{Lephare} and \code{BPZ}, see references in Tab.~\ref{tab:alg} for more details) estimate photometric redshifts by comparing observed galaxy photometry to a set of predefined theoretical or empirical galaxy templates.  These templates represent a range of galaxy spectral energy distributions (SEDs) that are meant to span the expected range of galaxy types observed in the Universe.  Synthetic model fluxes are computed by red-shifting each SED to a set grid of values and convolving with the Rubin filter curves,  which characterizes the expected variation in observed colors with redshift.  Our algorithms calculate the chi-square/likelihood for each SED at each grid point by comparing the model fluxes in our photometric bands to the observed fluxes and uncertainties.  This process enables the algorithm to determine the relative likelihood for each redshift for a given galaxy by identifying the template that best matches its observed color signature.  An optional empirical Bayesian prior can also be applied to produce a posterior probability rather than a straight likelihood if information on the expected distributions are available.  The training phase for these algorithms consist mostly of preparing pre-computed tables for the expected fluxes in each filter band for each SED template.
 
 Two sets of templates are included in the \code{rail\_base} software package and used in this note: the ``CWWSB'' templates that are the default templates used by \code{rail\_bpz} and described in \citet[]{Coe:06}, consisting of eight total SEDs, one Elliptical template, two Spiral templates, and five Irregular/Starburst template.  In this note, these SEDs are used to compute synthetic colors that we compare to the observational data in Figures~\ref{fig:dp_color_v_redshift} and~\ref{fig:dp_color_v_color}, but are otherwise not used.  The second template set consists of those described in \citet[]{Ilbert:09}, consisting of 31 synthetic SEDs (including some that are ``interpolated'' between adjacent templates by taking the mean of the two SEDs).  These SEDs are included with \code{rail\_lephare} as ``COSMOS\_mod.list'' in the \code{lephare-data} package.  These SEDs are used by both template codes \code{rail\_bpz} and \code{rail\_lephare}.  The 31 base SEDs contain no internal dust extinction, \code{rail\_lephare} is configured to include dust automatically, while \code{rail\_bpz} required dust to be added explicitly, and additional SED templates that include internal extinction added to the input SED list. \code{LePhare} also includes a set of stellar and AGN SEDs, which are available in the \code{lephare-data} package.
 
@@ -285,7 +285,7 @@ Additionally, \code{rail\_projects} facilitates the management of large datasets
 \subsection{Data exploration and algorithm optimization}
 \label{sec:method:optimization}
 
-We explored dozens of different configuration settings, covering analysis choices such as which flux measurements to use, the machine learning hyper-parameters, which sets of SED templates to use, among others.   The \href{https://github.com/LSSTDESC/rail_project_config/blob/main/dp2/dp2.yaml}{dp2/dp2.yaml} configuration file (see Sec.~\ref{sec:products:configuration}) captures the set of configurations that we tested and labels each set into an analysis ``flavor'' to facilitate bookkeeping. 
+We explored dozens of different configuration settings, covering analysis choices such as which flux measurements to use, the machine learning hyper-parameters, which sets of SED templates to use, among others.   The \href{https://github.com/LSSTDESC/rail_project_config/blob/main/dp2/dp2.yaml}{dp2/dp2.yaml} configuration file (see Sec.~\ref{sec:products:configuration}) captures the set of configurations that we tested and labels each set into an analysis ``flavor'' to facilitate bookkeeping.
 
 After examining the performance of the algorithms under different configurations, we settled on a set of optimized parameters for each algorithm and on the \code{gaap\_1p0} fluxes to produce the best-effort catalogs for DP2.   These optimized configurations parameters are captured in the \href{https://github.com/LSSTDESC/rail_project_config/blob/main/dp2/dp2_v3p1.yaml}{dp2/dp2\_v3p1.yaml} configuration file.
 
@@ -349,8 +349,8 @@ Applying a simple cut on the RMS of the $p(z)$ distribution can dramatically red
 \begin{figure*}
     \centering
     \includegraphics[width=0.33\linewidth]{figures/tpz_scatter_all.png}
-    \includegraphics[width=0.33\linewidth]{figures/tpz_scatter_good.png} 
-    \includegraphics[width=0.33\linewidth]{figures/tpz_scatter_very_good.png} \\    
+    \includegraphics[width=0.33\linewidth]{figures/tpz_scatter_good.png}
+    \includegraphics[width=0.33\linewidth]{figures/tpz_scatter_very_good.png} \\
     \caption{Estimator performance for \code{TPZ} with no cut(left) and quality cuts of $\sigma_{p(z)} < 0.4$ (center) and $\sigma_{p(z)} < 0.2$ (right).}
     \label{fig:scatter_quality_cut}
 \end{figure*}
@@ -388,11 +388,11 @@ Tables~\ref{tab:estimate_times} and \ref{tab:inform_times} show per-object estim
 Algorithm & 4 Band (ms/obj) & 6 Band (ms/obj) \\
   \hline
  \code{BPZ} & 15.95 & 18.29 \\
- \code{DNF} & 1.86 & 2.25 \\ 
+ \code{DNF} & 1.86 & 2.25 \\
  \code{FlexZBoost} & 1.27& 1.34 \\
  \code{GPz} & 0.03 & 0.03 \\
- \code{KNN} & 1.04 & 0.46 \\ 
- \code{LePHARE} & 229.43 & 253.14 \\ 
+ \code{KNN} & 1.04 & 0.46 \\
+ \code{LePHARE} & 229.43 & 253.14 \\
  \code{TPZ} & 4.17& 3.88 \\
  \hline
  \hline
@@ -485,7 +485,7 @@ In this analysis, while there was some optimization of code-specific parameters 
 
 As stated in the introduction, we expect feedback from science users as they explore the data and discover issues that we have not anticipated, and that we will incorporate that feedback in future work.
 ]]]
-Key takeaway: while very promising, these results are far from final, there is ongoing work to optimize \photoz performance.  We have plans in place and will continue to refine as new data arrives, and these plans should lead to improved redshift performance. 
+Key takeaway: while very promising, these results are far from final, there is ongoing work to optimize \photoz performance.  We have plans in place and will continue to refine as new data arrives, and these plans should lead to improved redshift performance.
 
 \pagebreak
 
@@ -500,7 +500,7 @@ In the course of this work, we generated several data products, including redshi
 \subsection{Configuration files}
 \label{sec:products:configuration}
 
-The configuration files, collected \href{https://github.com/lsstdesc/rail_project_config}{in the GitHub \code{rail\_project\_config}} repository, provide the necessary parameters and settings to control the various stages of the redshift estimation process, are a key element of \code{rail\_projects} workflow.  These files typically include specifications for the photometric bands used (e.g., g, r, i, z), the algorithm choices (e.g., template fitting or machine learning methods), details about data pre-processing, such as feature normalization and handling of missing data.  These configuration files also specify the training and validation dataset splits, hyper-parameters for machine learning models, and paths for input/output data.  These files are essential for ensuring reproducibility and for sharing the exact settings used in different redshift estimation runs, enabling other researchers to replicate or extend the analysis. 
+The configuration files, collected \href{https://github.com/lsstdesc/rail_project_config}{in the GitHub \code{rail\_project\_config}} repository, provide the necessary parameters and settings to control the various stages of the redshift estimation process, are a key element of \code{rail\_projects} workflow.  These files typically include specifications for the photometric bands used (e.g., g, r, i, z), the algorithm choices (e.g., template fitting or machine learning methods), details about data pre-processing, such as feature normalization and handling of missing data.  These configuration files also specify the training and validation dataset splits, hyper-parameters for machine learning models, and paths for input/output data.  These files are essential for ensuring reproducibility and for sharing the exact settings used in different redshift estimation runs, enabling other researchers to replicate or extend the analysis.
 
 
 \subsection{Ancillary input files}
@@ -537,11 +537,11 @@ In addition to the raw redshift estimates, the \code{qp} files also store per-ob
 We also generate meta catalog file that collects the Object ID, magnitude information, and point estimates. The point estimates are named by ``\{algorithm\}\_z\_\{point estimate name\}''.
 Here is a list of the point estimates and summary statistics that are stored for each algorithm and the corresponding column names:
 \begin{enumerate}
-    \item \textbf{mean}: is the per-object expectation of redshift given by the PDF. 
+    \item \textbf{mean}: is the per-object expectation of redshift given by the PDF.
     \item \textbf{median}: is the 50\% percentile of the PDF.
-    \item \textbf{mode}: is the redshift that yields maximum PDF evaluated on 301 grid points between $z=0$-$3$. 
-    \item \textbf{err68\_lower(upper)}: is the 16th (84th) percentile of the per-galaxy PDF, which correspond to the 1$\sigma$ confidence interval. 
-    \item \textbf{err95\_lower(upper)}: is the $2.5$th ($97.5$th) percentile of the per-galaxy PDF, which correspond to the 2$\sigma$ confidence interval. 
+    \item \textbf{mode}: is the redshift that yields maximum PDF evaluated on 301 grid points between $z=0$-$3$.
+    \item \textbf{err68\_lower(upper)}: is the 16th (84th) percentile of the per-galaxy PDF, which correspond to the 1$\sigma$ confidence interval.
+    \item \textbf{err95\_lower(upper)}: is the $2.5$th ($97.5$th) percentile of the per-galaxy PDF, which correspond to the 2$\sigma$ confidence interval.
 \end{enumerate}
 Fig.~\ref{fig:pdf} shows an example of the $p(z)$ distribution, point-estimates and summary statistics for a single object.
 
@@ -565,7 +565,7 @@ Finally, we produced standardized performance monitoring plots as part of the ph
 \item{Redshift comparison plots, e.g., the bias or width of the redshift residuals, $\frac{z_{\rm phot} - z_{\rm spec}}{1 + z_{\rm spec}}$, as a function of redshift or object magnitude.}
 \end{itemize}
 
-To robustly summarize the distribution of residuals while minimizing the influence of outliers, we compute biweighted statistics following a two-step procedure. First, we apply an iterative $3\sigma$ clipping to the input array using \texttt{scipy.stats.sigmaclip}, repeating the clipping process \texttt{nclip} times (default is 3). This removes extreme outliers before computing robust estimators. We then calculate the \textit{biweight location} and \textit{biweight scale} of the clipped subset using the \texttt{astropy.stats} functions, which yield robust analogs to the mean and standard deviation, respectively. 
+To robustly summarize the distribution of residuals while minimizing the influence of outliers, we compute biweighted statistics following a two-step procedure. First, we apply an iterative $3\sigma$ clipping to the input array using \texttt{scipy.stats.sigmaclip}, repeating the clipping process \texttt{nclip} times (default is 3). This removes extreme outliers before computing robust estimators. We then calculate the \textit{biweight location} and \textit{biweight scale} of the clipped subset using the \texttt{astropy.stats} functions, which yield robust analogs to the mean and standard deviation, respectively.
 
 In addition, we compute two outlier rates: the \textit{relative outlier rate}, defined as the fraction of values in the original sample that deviate from zero by more than $3\times$ the biweight scale, and the \textit{absolute outlier rate}, defined as the fraction of values exceeding a fixed threshold set by \texttt{self.config.abs\_out\_thresh}. This framework provides both robust central moments and a diagnostic of extreme deviations in the full sample.
 
@@ -626,18 +626,18 @@ Dataset type & Description \\
 \subsection{Distribution via the Photo-z Server}
 \label{sec:distribution:linea}
 
-Similar to the RSP, the PZ Server provides an API interface that enables users to access data through Python scripts from any location, provided they know the product name as registered on the server. 
- 
+Similar to the RSP, the PZ Server provides an API interface that enables users to access data through Python scripts from any location, provided they know the product name as registered on the server.
+
 If it is the first time using the library, it must be installed via \code{pip} in the terminal or in a notebook cell: \code{pip install --no-cache-dir pzserver}
 
-Then, the \code{PzServer} class opens the remote connection to the PZ Server database. An access token is required for authentication. The token can be generated by users on the PZ Server website (top right corner menu on the home page).    
+Then, the \code{PzServer} class opens the remote connection to the PZ Server database. An access token is required for authentication. The token can be generated by users on the PZ Server website (top right corner menu on the home page).
 
 \begin{verbatim}
 from pzserver import PzServer
-pz_server = PzServer(token="<paste your access token here>")  
+pz_server = PzServer(token="<paste your access token here>")
 \end{verbatim}
 
-To display the product metadata and download it to the local working directory (if not in a Jupyter notebook, replace \code{display} for \code{get}).   
+To display the product metadata and download it to the local working directory (if not in a Jupyter notebook, replace \code{display} for \code{get}).
 \begin{verbatim}
 pz_server.display_product_metadata("<product_id>")
 pz_server.download_product("<product_id>", save_in=".")
@@ -657,11 +657,11 @@ A tutorial notebook with examples for all \code{pzserver} methods is available o
 \subsection{Distribution via LSDB}
 \label{sec:distribution:lsdb}
 
-The DP2 data is published in Hierarchical Adaptive Tiling Scheme (HATS) format on the Rubin Science Platform (RSP). HATS data can be read with any Parquet reader, but 
+The DP2 data is published in Hierarchical Adaptive Tiling Scheme (HATS) format on the Rubin Science Platform (RSP). HATS data can be read with any Parquet reader, but
 the LSDB package \citep{2025arXiv250102103C} enables loading large datasets with limited memory, performing efficient all-sky analysis, and fast cross matching to other surveys like DESI DR1 and Gaia DR3.
 
 The \photoz  point estimates (mean, mode, median and ``best''), 1 and 2 sigma redshift intervals for DP2 object catalog are served as tabular catalogs in the HATS format.
-The location on the RSP for this catalog is \texttt{/rubin/lsdb\_data/dp2/object\_photoz}. 
+The location on the RSP for this catalog is \texttt{/rubin/lsdb\_data/dp2/object\_photoz}.
 
 
 %  LocalWords:  citep photozs photoz Charles2025sitcomtn154 texttt qp
