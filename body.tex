@@ -1,11 +1,11 @@
 \section{Introduction}
 \label{sec:intro:0}
 
-The Vera C. Rubin Observatory's Data Preview 2 (DP2) represents a
+The NSF-DOE Vera C.\ Rubin Observatory's Data Preview 2 \citep[DP2;][]{RTN-115,10.71929/rubin/3382528} represents a
 significant step forward in preparation for the upcoming Legacy Survey
-of Space and Time (LSST), providing an essential testbed for
+of Space and Time \citep[LSST;][]{2019ApJ...873..111I}, providing an essential testbed for
 scientific tools and analytical pipelines using precursor imaging
-data~\citep{RTN-095}. A central goal of LSST is estimating photometric
+data. A central goal of LSST is estimating photometric
 redshifts (\photozs) for billions of galaxies, supporting
 extragalactic astrophysical research and cosmological studies that
 depend on reliable redshift measurements and distributions. In support
@@ -18,7 +18,7 @@ While \photoz estimates are not part of the official Data Preview 1
 task of producing \photoz values for all galaxies in DP2 using
 available multi-band imaging data on a best-effort basis, establishing
 a foundation for future large-scale implementations.   This science
-unit delivered redshifts for DP1\citep{Charles2025sitcomtn154, dp1_paper}.
+unit delivered redshifts for DP1\citep{SITCOMTN-154,2026AJ....171..360V}.
 
 For this purpose, we used the RAIL (Redshift Assessment
 Infrastructure Layers) software framework, a versatile and modular
@@ -55,7 +55,7 @@ Critically, the fields selected for commissioning observation included several c
 \subsubsection{Preparation of photometric object catalogs}
 \label{sec:data:dp2:preparation}
 
-The Rubin Data Management (Rubin DM) pipeline measures multiple types of object photometry, the first stage in creating a \photoz catalog was to determine which measured photometry we would use as inputs.  In this note, we generally use the 1.0 arc-second Gaussian Aperture fluxes and their associated errors, e.~g.~\texttt{u\_gaap1p0Flux} and \texttt{u\_gaap1p0FluxErr}.  These fluxes should provide good measures of consistent galaxy colors within the defined aperture, ideal for \photoz estimation, though they may not necessarily reflect the colors of the overall galaxy if there is a significant color gradient and the galaxy is larger than the 1.0 arc-second aperture.  This choice of photometric measurement may not be ideal, and investigation into the optimized set of photometric inputs will continue into the future.   This is similar to studies done with DP1 and described in the associated technote and paper~\citep{Charles2025sitcomtn154, dp1_pz_paper}.
+The Rubin Data Management (Rubin DM) pipeline measures multiple types of object photometry, the first stage in creating a \photoz catalog was to determine which measured photometry we would use as inputs.  In this note, we generally use the 1.0 arc-second Gaussian Aperture fluxes and their associated errors, e.~g.~\texttt{u\_gaap1p0Flux} and \texttt{u\_gaap1p0FluxErr}.  These fluxes should provide good measures of consistent galaxy colors within the defined aperture, ideal for \photoz estimation, though they may not necessarily reflect the colors of the overall galaxy if there is a significant color gradient and the galaxy is larger than the 1.0 arc-second aperture.  This choice of photometric measurement may not be ideal, and investigation into the optimized set of photometric inputs will continue into the future.   This is similar to studies done with DP1 and described in the associated technote and paper~\citep{SITCOMTN-154, dp1_pz_paper}.
 
 The DP2 imaging is highly inhomogeneous in both depth and band coverage, which directly shapes how we prepare the catalogs and train our models.  In Fig.~\ref{fig:dp2_depth}, we show the median $5\sigma$ extended-source depth in the $i$ band, derived from the 1.0 arc-second GAaP fluxes, for each of the 1391 tracts in DP2.  The median depth across the footprint is $24.27$~mag, but the tract-to-tract variation is large, spanning roughly $23.5$ to $25.5$~mag.  In addition, not all tracts are observed in all six bands: as shown in the bottom panel of Fig.~\ref{fig:dp2_depth}, 931 tracts have full six-band ($ugrizy$) coverage while 460 tracts are observed in only four bands ($griz$).  Because the available bands set the input features for \photoz estimation, we cannot apply a single model uniformly across the footprint.  We therefore train, for each algorithm in this work, one model on the six-band tracts and a separate model on the four-band tracts, and apply each model to the corresponding subset of the footprint.  We note that the large depth variation implies that the effective magnitude limit and hence the \photoz quality also varies across the footprint.
 
@@ -67,7 +67,7 @@ The DP2 imaging is highly inhomogeneous in both depth and band coverage, which d
     \label{fig:dp2_depth}
 \end{figure*}
 
-Preparing object catalog~\citep{RubinObs2025DP1} data for \photoz algorithm training and estimation included five steps:
+Preparing object catalog~\citep{10.71929/rubin/3382539} data for \photoz algorithm training and estimation included five steps:
 
 \begin{enumerate}
 \item{Applying quality cuts to the object catalog.   We developed a selection for the training and test datasets and two additional selections for full DP2 catalogs: one applicable for fields with observations in only four bands (\selection{dp2\_4band}, requiring per-tract median depth in 'griz' $< 23mag$  the other for fields with observations in all six bands (\selection{dp2\_6band}, requiring per-tract median depth in 'ugrizy' $< 22mag$).}
@@ -479,7 +479,7 @@ This note describes an initial calculation of photometric redshifts on the Rubin
 
 However, work will continue on several fronts to further optimize the performance of our redshift predictions.  As mentioned earlier in the note, the definition of the true redshift reference sample used to train our algorithms has a large impact on results, being the ``truth'' used to define the flux/color-to-redshift mapping that is inherent to \photoz estimation.  We will work to refine our reference sample definition, which objects to include/exclude based on quality flags, explore the tradeoffs of including grism and many-band \photoz estimates with larger redshift uncertainties in our training sample, and other such effects.  As more and more Rubin data is taken, areal coverage is increasing, including coverage of additional deep calibration fields with existing spec-z datasets.  This will naturally improve \photoz performance.  Expansion of reference redshifts will also enable the development of improved object flagging for identifying which redshifts are trustworthy and those which are likely to be incorrect.
 
-We will also continue to examine the Rubin photometry and evaluate the performance of multiple measurement algorithms.  In this note we used Gaussian Aperture (Gaap) fluxes and magnitudes, as they are expected to produce consistent colors.  We will undertake a thorough exploration of multiple flux measurements (e.~g.~cModel, Sersic, additional Gaap apertures) to test which combinations lead to the best \photoz estimates, as well as combinations like using multiple aperture magnitudes that may contain information on the galaxy light profile that could help to constrain redshift.  As we are still in the engineering and testing phase of the project, there is ongoing work to characterize system performance, and improved understanding of the system will likely lead to better \photoz performance.  For example, there may be some hints that u-band fluxes are overestimated and u-band uncertainties underestimated at faint magnitudes (see the high redshift u-g colors in Fig.~\ref{fig:dp_color_v_redshift} and figures in~\citet{RTN-095}).   DP2 data was obtained using LSSTCam during commissioning while future data releases will use LSSTCam data from survey operations, and thus performance for DR1 and beyond may be shaped by improvements in operations, data reduction and photometric calibrations.
+We will also continue to examine the Rubin photometry and evaluate the performance of multiple measurement algorithms.  In this note we used Gaussian Aperture (Gaap) fluxes and magnitudes, as they are expected to produce consistent colors.  We will undertake a thorough exploration of multiple flux measurements (e.~g.~cModel, Sersic, additional Gaap apertures) to test which combinations lead to the best \photoz estimates, as well as combinations like using multiple aperture magnitudes that may contain information on the galaxy light profile that could help to constrain redshift.  As we are still in the engineering and testing phase of the project, there is ongoing work to characterize system performance, and improved understanding of the system will likely lead to better \photoz performance.  For example, there may be some hints that u-band fluxes are overestimated and u-band uncertainties underestimated at faint magnitudes (see the high redshift u-g colors in Fig.~\ref{fig:dp_color_v_redshift} and figures in~\citet{2026AJ....171..360V}).   DP2 data was obtained using LSSTCam during commissioning while future data releases will use LSSTCam data from survey operations, and thus performance for DR1 and beyond may be shaped by improvements in operations, data reduction and photometric calibrations.
 
 In this analysis, while there was some optimization of code-specific parameters for the individual estimators, e.~g.~the number of neighbors used for \code{KNN}, the number of trees used for \code{TPZ}, it was not comprehensive.  In addition, the optimal values will likely change slightly as we refine both our spectroscopic reference sample and our photometric inputs.  A thorough exploration of the code parameters will happen as we converge on our final photometric and spectroscopic setup.
 
